@@ -1,31 +1,81 @@
 (function (global) {
   'use strict';
 
-  const pressed = new Set();
+  const KEY_MAP = {
+    ArrowLeft: 'left',
+    KeyA: 'left',
+    ArrowRight: 'right',
+    KeyD: 'right',
+    ArrowDown: 'down',
+    KeyS: 'down',
+    Space: 'go',
+    Enter: 'go'
+  };
+
+  const active = new Set();
+  const goHandlers = [];
+
+  function press(action) {
+    if (action === 'go') {
+      goHandlers.forEach(function (handler) {
+        handler();
+      });
+      return;
+    }
+    active.add(action);
+  }
+
+  function release(action) {
+    active.delete(action);
+  }
 
   window.addEventListener('keydown', function (event) {
-    pressed.add(event.code);
+    const action = KEY_MAP[event.code];
+    if (!action) return;
+    event.preventDefault();
+    if (action === 'go' && event.repeat) return;
+    press(action);
   });
 
   window.addEventListener('keyup', function (event) {
-    pressed.delete(event.code);
+    const action = KEY_MAP[event.code];
+    if (!action) return;
+    release(action);
   });
 
   global.Input = {
-    isDown: function (code) {
-      return pressed.has(code);
+    isDown: function (action) {
+      return active.has(action);
     },
     axisX: function () {
       let axis = 0;
-      if (pressed.has('ArrowLeft') || pressed.has('KeyA')) axis -= 1;
-      if (pressed.has('ArrowRight') || pressed.has('KeyD')) axis += 1;
+      if (active.has('left')) axis -= 1;
+      if (active.has('right')) axis += 1;
       return axis;
     },
     axisY: function () {
-      let axis = 0;
-      if (pressed.has('ArrowUp') || pressed.has('KeyW')) axis -= 1;
-      if (pressed.has('ArrowDown') || pressed.has('KeyS')) axis += 1;
-      return axis;
+      return active.has('down') ? 1 : 0;
+    },
+    onGo: function (handler) {
+      goHandlers.push(handler);
+    },
+    bindButton: function (element, action) {
+      element.addEventListener('pointerdown', function (event) {
+        event.preventDefault();
+        element.classList.add('is-pressed');
+        press(action);
+      });
+
+      ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (type) {
+        element.addEventListener(type, function () {
+          element.classList.remove('is-pressed');
+          release(action);
+        });
+      });
+
+      element.addEventListener('contextmenu', function (event) {
+        event.preventDefault();
+      });
     }
   };
 })(window);

@@ -9,13 +9,17 @@
     scoreEl.textContent = String(value);
   };
 
-  document.getElementById('start').addEventListener('click', function () {
-    game.start();
+  document.querySelectorAll('.key').forEach(function (button) {
+    window.Input.bindButton(button, button.dataset.action);
   });
 
-  document.getElementById('pause').addEventListener('click', function () {
-    game.pause();
+  window.Input.onGo(function () {
+    game.go();
   });
 
-  game.render();
+  window.addEventListener('resize', function () {
+    game.resize();
+  });
+
+  game.resize();
 })();
