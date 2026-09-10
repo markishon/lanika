@@ -13,12 +13,20 @@
       <p class="hud__stat">Счёт: <span id="score">0</span></p>
     </header>
 
-    <canvas id="game" class="game-canvas" width="800" height="450"></canvas>
+    <div class="field">
+      <canvas id="game" class="field__canvas"></canvas>
+    </div>
 
-    <footer class="controls">
-      <button id="start" type="button" class="button">Старт</button>
-      <button id="pause" type="button" class="button">Пауза</button>
-    </footer>
+    <div class="pad">
+      <div class="pad__group">
+        <button type="button" class="key" data-action="left" aria-label="Влево">←</button>
+        <button type="button" class="key" data-action="down" aria-label="Вниз">↓</button>
+      </div>
+      <div class="pad__group">
+        <button type="button" class="key" data-action="right" aria-label="Вправо">→</button>
+        <button type="button" class="key key--go" data-action="go" aria-label="Ход">GO</button>
+      </div>
+    </div>
   </div>
 
   <script src="js/input.js"></script>

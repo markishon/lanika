@@ -3,6 +3,9 @@
   --panel: #1b2030;
   --text: #e7ecf5;
   --accent: #4cc2ff;
+  --key-face: #f4f5f7;
+  --key-edge: #c3c7cf;
+  --key-text: #23262d;
 }
 
 * {
@@ -23,7 +26,7 @@ body {
 .game-shell {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
   padding: 16px;
   background: var(--panel);
   border-radius: 12px;
@@ -48,29 +51,76 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-.game-canvas {
+.field {
+  width: min(92vw, 60vh, 480px);
+  aspect-ratio: 1;
+}
+
+.field__canvas {
   display: block;
-  max-width: 100%;
+  width: 100%;
+  height: 100%;
   background: #0a0d14;
   border: 1px solid #2b3346;
   border-radius: 8px;
 }
 
-.controls {
+.pad {
   display: flex;
-  gap: 8px;
+  justify-content: space-between;
+  gap: 24px;
 }
 
-.button {
-  padding: 8px 16px;
-  border: 1px solid var(--accent);
-  border-radius: 6px;
-  background: transparent;
-  color: var(--accent);
-  font: inherit;
+.pad__group {
+  display: flex;
+  gap: 12px;
+}
+
+.key {
+  min-width: 56px;
+  height: 56px;
+  padding: 0 14px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #ffffff 0%, var(--key-face) 100%);
+  box-shadow: 0 3px 0 var(--key-edge), 0 5px 10px rgba(0, 0, 0, 0.35);
+  color: var(--key-text);
+  font: 600 20px/1 system-ui, sans-serif;
   cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.button:hover {
-  background: rgba(76, 194, 255, 0.12);
+.key--go {
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+
+.key:active,
+.key.is-pressed {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--key-edge), 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.key:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+  .game-shell {
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .field {
+    width: min(92vw, 52vh);
+    margin: 0 auto;
+  }
+
+  .key {
+    min-width: 64px;
+    height: 64px;
+  }
 }
