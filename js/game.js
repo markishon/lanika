@@ -10,6 +10,7 @@
     this.ctx = canvas.getContext('2d');
     this.size = FIELD_SIZE;
     this.running = false;
+    this.frameId = 0;
     this.lastTime = 0;
     this.score = 0;
     this.player = { x: FIELD_SIZE / 2, y: FIELD_SIZE / 2, size: PLAYER_SIZE };
@@ -21,11 +22,13 @@
     if (this.running) return;
     this.running = true;
     this.lastTime = performance.now();
-    requestAnimationFrame(this.loop);
+    this.frameId = requestAnimationFrame(this.loop);
   };
 
   Game.prototype.stop = function () {
     this.running = false;
+    cancelAnimationFrame(this.frameId);
+    this.frameId = 0;
   };
 
   Game.prototype.loop = function (time) {
@@ -34,7 +37,7 @@
     this.lastTime = time;
     this.update(delta);
     this.render();
-    requestAnimationFrame(this.loop);
+    this.frameId = requestAnimationFrame(this.loop);
   };
 
   Game.prototype.update = function (delta) {
